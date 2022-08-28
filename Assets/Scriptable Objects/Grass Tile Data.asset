@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bff0e3ead6c5be49a3ca3c2ef06e62e, type: 3}
   m_Name: Grass Tile Data
   m_EditorClassIdentifier: 
-  tileBase:
+  tiles:
   - {fileID: 11400000, guid: 4a588d878bd1f7440b24837e5830b9aa, type: 2}
   movementCost: 1
   protection: 0
