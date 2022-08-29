@@ -2,8 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit : MonoBehaviour
+public class BattleController : MonoBehaviour
 {
+
+    [SerializeField]
+    MapManager map;
+
+
+    [SerializeField]
+    Unit currentUnit;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -13,11 +21,9 @@ public class Unit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-    }
-
-    private void OnMouseDown()
-    {
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if (Input.GetMouseButtonDown(0))
+        {
+            
+        }
     }
 }
