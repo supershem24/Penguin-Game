@@ -6,7 +6,7 @@ public class BattleController : MonoBehaviour
 {
 
     [SerializeField]
-    MapManager map;
+    MapManager mapManager;
 
 
     [SerializeField]
@@ -15,15 +15,12 @@ public class BattleController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        currentUnit.setTilemap(mapManager.groundMap);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            
-        }
+        
     }
 }

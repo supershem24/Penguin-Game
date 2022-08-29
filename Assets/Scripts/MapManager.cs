@@ -6,8 +6,8 @@ using UnityEngine.Tilemaps;
 public class MapManager : MonoBehaviour
 {
 
-    [SerializeField]
-    Tilemap map;
+    public Tilemap groundMap;
+    public Tilemap highlighterMap;
     [SerializeField]
     List<TileData> tileDatas; // gets all the tileData's
 
@@ -35,9 +35,9 @@ public class MapManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int gridPosition = map.WorldToCell(mousePosition);
+            Vector3Int gridPosition = groundMap.WorldToCell(mousePosition);
 
-            TileBase tile = map.GetTile(gridPosition);
+            TileBase tile = groundMap.GetTile(gridPosition);
 
             int move = dataFromTiles[tile].movementCost;
             
