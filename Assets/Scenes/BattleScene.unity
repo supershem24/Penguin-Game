@@ -198,10 +198,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b6c99224847b5b428db3ca0f54e12b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  map: {fileID: 2078288119}
+  groundMap: {fileID: 2078288119}
+  highlighterMap: {fileID: 2134453471}
   tileDatas:
   - {fileID: 11400000, guid: be951d8a6dedf044783eaf80589549a4, type: 2}
   - {fileID: 11400000, guid: 988d5e12710b3404aa7be231d2397d9e, type: 2}
+  moveHighlight: {fileID: 11400000, guid: 70fadde35478e8244af43d33e6a029b9, type: 2}
+  attackHighlight: {fileID: 11400000, guid: ec2eff05b628cd643928d30f4fb83f90, type: 2}
 --- !u!4 &406161518
 Transform:
   m_ObjectHideFlags: 0
@@ -228,6 +231,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -301,6 +305,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d55f8bdb82f85b479018c96d16d8de1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapManager: {fileID: 406161517}
+  currentUnit: {fileID: 1207968689}
 --- !u!1 &1207968685
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,6 +330,7 @@ GameObject:
   - component: {fileID: 1207968687}
   - component: {fileID: 1207968686}
   - component: {fileID: 1207968688}
+  - component: {fileID: 1207968689}
   m_Layer: 0
   m_Name: Unit Tester
   m_TagString: Untagged
@@ -412,6 +431,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 9.16, y: 9.16}
   m_EdgeRadius: 0
+--- !u!114 &1207968689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207968685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d8bc1b120cffd4989bb781a096a2be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2078288116
 GameObject:
   m_ObjectHideFlags: 0
@@ -5593,7 +5624,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16

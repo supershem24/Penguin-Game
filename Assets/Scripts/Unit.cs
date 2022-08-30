@@ -5,9 +5,11 @@ using UnityEngine.Tilemaps;
 
 public class Unit : MonoBehaviour
 {
-    Tilemap map;
+    MapManager map;
 
-    public void setTilemap(Tilemap map) { this.map = map; }
+    public void setTilemap(MapManager map) { this.map = map; }
+
+    int movementRange = 4;
 
     // Start is called before the first frame update
     void Start()
@@ -24,12 +26,7 @@ public class Unit : MonoBehaviour
     private void OnMouseDown()
     {
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3Int gridPosition = map.WorldToCell(mousePosition);
-
-        TileBase tile = map.GetTile(gridPosition);
-
-        int move = dataFromTiles[tile].movementCost;
-
-        print(tile + ", " + move);
+        Vector3Int gridPosition = map.groundMap.WorldToCell(mousePosition);
+        map.PlaceHighlight(gridPosition, movementRange);
     }
 }
