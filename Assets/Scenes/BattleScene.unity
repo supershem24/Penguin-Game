@@ -203,8 +203,12 @@ MonoBehaviour:
   tileDatas:
   - {fileID: 11400000, guid: be951d8a6dedf044783eaf80589549a4, type: 2}
   - {fileID: 11400000, guid: 988d5e12710b3404aa7be231d2397d9e, type: 2}
+  - {fileID: 11400000, guid: 306f27ebe7d36e6489e834edc52f1693, type: 2}
+  - {fileID: 11400000, guid: b58eae90c44e8fe458fc3169d82e68d6, type: 2}
   grassTile: {fileID: 11400000, guid: 4a588d878bd1f7440b24837e5830b9aa, type: 2}
   mountainTile: {fileID: 11400000, guid: 53d891add3ef34947b80b2877476739f, type: 2}
+  iceTile: {fileID: 11400000, guid: 82bc85b2afe74be40a16c848ac5fda6b, type: 2}
+  desertTile: {fileID: 11400000, guid: e63ec66de070f5e45b946fabc26b6ad4, type: 2}
   moveHighlight: {fileID: 11400000, guid: 70fadde35478e8244af43d33e6a029b9, type: 2}
   attackHighlight: {fileID: 11400000, guid: ec2eff05b628cd643928d30f4fb83f90, type: 2}
 --- !u!4 &406161518

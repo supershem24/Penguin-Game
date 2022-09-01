@@ -15,6 +15,10 @@ public class MapManager : MonoBehaviour
     [SerializeField]
     TileBase mountainTile;
     [SerializeField]
+    TileBase iceTile;
+    [SerializeField]
+    TileBase desertTile;
+    [SerializeField]
     TileBase moveHighlight;
     [SerializeField]
     TileBase attackHighlight;
@@ -67,12 +71,23 @@ public class MapManager : MonoBehaviour
         {
             for(int y = -MapSizeY/2; y < MapSizeY/2; y++)
             {
-                rand = Random.Range(0, 2);
-                switch (rand)
+                rand = Random.Range(0, 4);
+                tile = null;
+                if(rand == 0)
                 {
-                    case 0: tile = grassTile; break;
-                    case 1: tile = mountainTile; break;
-                    default: tile = null; break;
+                    tile = grassTile;
+                }
+                else if(rand == 1)
+                {
+                    tile = mountainTile;
+                }
+                else if (rand == 2)
+                {
+                    tile = desertTile;
+                }
+                else if (rand == 3)
+                {
+                    tile = iceTile;
                 }
                 groundMap.SetTile(new Vector3Int(x, y, 0), tile);
             }
