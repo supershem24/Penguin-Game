@@ -48,7 +48,6 @@ public class MapManager : MonoBehaviour
             
             print(tile + ", " + move);
 
-            
 
 
         }
