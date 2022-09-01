@@ -11,10 +11,16 @@ public class MapManager : MonoBehaviour
     [SerializeField]
     List<TileData> tileDatas; // gets all the tileData's
     [SerializeField]
+    TileBase grassTile;
+    [SerializeField]
+    TileBase mountainTile;
+    [SerializeField]
     TileBase moveHighlight;
     [SerializeField]
     TileBase attackHighlight;
 
+    int MapSizeX = 10;
+    int MapSizeY = 10;
     Dictionary<TileBase, TileData> dataFromTiles;
 
 
@@ -30,6 +36,8 @@ public class MapManager : MonoBehaviour
                 dataFromTiles.Add(tile, tileData);
             }
         }
+        CreateMap();
+
     }
 
     // Update is called once per frame
@@ -48,8 +56,26 @@ public class MapManager : MonoBehaviour
             
             print(tile + ", " + move);
 
+        }
+    }
 
-
+    void CreateMap()
+    {
+        int rand;
+        TileBase tile;
+        for(int x = -MapSizeX/2; x < MapSizeX/2; x++)
+        {
+            for(int y = -MapSizeY/2; y < MapSizeY/2; y++)
+            {
+                rand = Random.Range(0, 2);
+                switch (rand)
+                {
+                    case 0: tile = grassTile; break;
+                    case 1: tile = mountainTile; break;
+                    default: tile = null; break;
+                }
+                groundMap.SetTile(new Vector3Int(x, y, 0), tile);
+            }
         }
     }
 
