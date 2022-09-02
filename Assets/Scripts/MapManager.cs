@@ -5,6 +5,9 @@ using UnityEngine.Tilemaps;
 
 public class MapManager : MonoBehaviour
 {
+    [SerializeField]
+    BattleController battleController;
+
 
     public Tilemap groundMap;
     public Tilemap highlighterMap;
@@ -26,6 +29,7 @@ public class MapManager : MonoBehaviour
     int MapSizeX = 10;
     int MapSizeY = 10;
     Dictionary<TileBase, TileData> dataFromTiles;
+    List<Vector3Int> unitPoses = new List<Vector3Int>();
 
 
     void Awake()
@@ -99,14 +103,31 @@ public class MapManager : MonoBehaviour
         return dataFromTiles[groundMap.GetTile(tilePos)].movementCost;
     }
 
-    //places the movement Highlight
-    public void PlaceHighlight(Vector3Int tilePos, int movementLeft)
+    public void StartPlaceHighlight(Vector3Int tilePos, int movementLeft)
     {
+        unitPoses.Clear();
+        print("here");
+        for (int x = 0; x < battleController.Units.Count; x++)
+        {
+            if(battleController.Units[x].currentGridPos != tilePos)
+                unitPoses.Add(battleController.Units[x].currentGridPos);
+        }
+        PlaceHighlight(tilePos, movementLeft);
+    }
+
+    //places the movement Highlight
+    void PlaceHighlight(Vector3Int tilePos, int movementLeft)
+    {
+        for (int i = 0; i < unitPoses.Count; i++)
+            if (tilePos == unitPoses[i])
+                return;
+
         Vector3Int left = new Vector3Int(tilePos.x - 1, tilePos.y, tilePos.z);
         Vector3Int up = new Vector3Int(tilePos.x, tilePos.y + 1, tilePos.z);
         Vector3Int right = new Vector3Int(tilePos.x + 1, tilePos.y, tilePos.z);
         Vector3Int down = new Vector3Int(tilePos.x, tilePos.y - 1, tilePos.z);
 
+        
         highlighterMap.SetTile(tilePos, moveHighlight);
 
         if (movementLeft == 0)

@@ -9,14 +9,13 @@ public class BattleController : MonoBehaviour
     MapManager mapManager;
 
 
-    [SerializeField]
-    Unit currentUnit;
+    public List<Unit> Units;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        currentUnit.setTilemap(mapManager);
+        Unit.setTilemap(mapManager);
     }
 
     // Update is called once per frame
