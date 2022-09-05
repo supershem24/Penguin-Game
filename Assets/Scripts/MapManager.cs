@@ -22,14 +22,15 @@ public class MapManager : MonoBehaviour
     [SerializeField]
     TileBase desertTile;
     [SerializeField]
-    TileBase moveHighlight;
+    public TileBase moveHighlight;
     [SerializeField]
-    TileBase attackHighlight;
+    public TileBase attackHighlight;
 
     int MapSizeX = 10;
     int MapSizeY = 10;
     Dictionary<TileBase, TileData> dataFromTiles;
-    List<Vector3Int> unitPoses = new List<Vector3Int>();
+    public List<Vector3Int> friendlyUnitPoses = new List<Vector3Int>();
+    public List<Vector3Int> enemyUnitPoses = new List<Vector3Int>();
 
 
     void Awake()
@@ -62,7 +63,7 @@ public class MapManager : MonoBehaviour
 
             int move = dataFromTiles[tile].movementCost;
             
-            print(tile + ", " + move);
+            //print(tile + ", " + move);
 
         }
     }
@@ -75,7 +76,7 @@ public class MapManager : MonoBehaviour
         {
             for(int y = -MapSizeY/2; y < MapSizeY/2; y++)
             {
-                rand = Random.Range(0, 4);
+                rand = Random.Range(0, 100);
                 tile = null;
                 if(rand == 0)
                 {
@@ -89,7 +90,7 @@ public class MapManager : MonoBehaviour
                 {
                     tile = desertTile;
                 }
-                else if (rand == 3)
+                else if (rand >= 3)
                 {
                     tile = iceTile;
                 }
@@ -103,38 +104,67 @@ public class MapManager : MonoBehaviour
         return dataFromTiles[groundMap.GetTile(tilePos)].movementCost;
     }
 
-    public void StartPlaceHighlight(Vector3Int tilePos, int movementLeft)
+    // isAttack, if true will go to PlaceAttackHighlight, if false, it won't
+    public void StartPlaceHighlight(Vector3Int tilePos, int movementLeft, bool isAttack)
     {
-        unitPoses.Clear();
-        print("here");
-        for (int x = 0; x < battleController.Units.Count; x++)
+        friendlyUnitPoses.Clear();
+        enemyUnitPoses.Clear();
+        for (int x = 0; x < battleController.friendlyUnits.Count; x++)
         {
-            if(battleController.Units[x].currentGridPos != tilePos)
-                unitPoses.Add(battleController.Units[x].currentGridPos);
+            if(battleController.friendlyUnits[x].currentGridPos != tilePos)
+                friendlyUnitPoses.Add(battleController.friendlyUnits[x].currentGridPos);
         }
-        PlaceHighlight(tilePos, movementLeft);
+        for (int x = 0; x < battleController.enemyUnits.Count; x++)
+        {
+            enemyUnitPoses.Add(battleController.enemyUnits[x].currentGridPos);
+        }
+        
+        if (!isAttack) 
+        {
+            PlaceHighlight(tilePos, movementLeft);
+        }
+        else if (isAttack)
+        {
+            PlaceAttackHighlight(tilePos, movementLeft);
+        }
     }
 
     //places the movement Highlight
     void PlaceHighlight(Vector3Int tilePos, int movementLeft)
     {
-        for (int i = 0; i < unitPoses.Count; i++)
-            if (tilePos == unitPoses[i])
-                return;
-
-        Vector3Int left = new Vector3Int(tilePos.x - 1, tilePos.y, tilePos.z);
-        Vector3Int up = new Vector3Int(tilePos.x, tilePos.y + 1, tilePos.z);
-        Vector3Int right = new Vector3Int(tilePos.x + 1, tilePos.y, tilePos.z);
-        Vector3Int down = new Vector3Int(tilePos.x, tilePos.y - 1, tilePos.z);
-
         
-        highlighterMap.SetTile(tilePos, moveHighlight);
+        for (int i = 0; i < enemyUnitPoses.Count; i++)
+        {
+            if (tilePos == enemyUnitPoses[i])
+            {
+                //print(movementLeft);
+                return;
+            }
+        }
+            
+        
+        bool hasFriendlyUnit = false;
+        for (int i = 0; i < friendlyUnitPoses.Count; i++)
+        {
+            if (tilePos == friendlyUnitPoses[i])
+            {
+                hasFriendlyUnit = true;
+                break;
+            }
+        }
 
+        if (!hasFriendlyUnit)
+            highlighterMap.SetTile(tilePos, moveHighlight);
+        
         if (movementLeft == 0)
         {
             return;
         }
 
+        Vector3Int left = new Vector3Int(tilePos.x - 1, tilePos.y, tilePos.z);
+        Vector3Int up = new Vector3Int(tilePos.x, tilePos.y + 1, tilePos.z);
+        Vector3Int right = new Vector3Int(tilePos.x + 1, tilePos.y, tilePos.z);
+        Vector3Int down = new Vector3Int(tilePos.x, tilePos.y - 1, tilePos.z);
 
         //left
         if(groundMap.HasTile(left) && movementLeft >= getMovementCost(left))
@@ -158,4 +188,44 @@ public class MapManager : MonoBehaviour
         }
     }
 
+    void PlaceAttackHighlight(Vector3Int tilePos, int attackrangeLeft)
+    {
+        /*for (int i = 0; i < unitPoses.Count; i++)
+            if (tilePos == unitPoses[i])*/
+
+        Vector3Int left = new Vector3Int(tilePos.x - 1, tilePos.y, tilePos.z);
+        Vector3Int up = new Vector3Int(tilePos.x, tilePos.y + 1, tilePos.z);
+        Vector3Int right = new Vector3Int(tilePos.x + 1, tilePos.y, tilePos.z);
+        Vector3Int down = new Vector3Int(tilePos.x, tilePos.y - 1, tilePos.z);
+
+
+        highlighterMap.SetTile(tilePos, attackHighlight);
+
+        if (attackrangeLeft == 0)
+        {
+            return;
+        }
+
+
+        //left
+        if (groundMap.HasTile(left))
+        {
+            PlaceAttackHighlight(left, attackrangeLeft - 1);
+        }
+        //up
+        if (groundMap.HasTile(up))
+        {
+            PlaceAttackHighlight(up, attackrangeLeft - 1);
+        }
+        //right
+        if (groundMap.HasTile(right))
+        {
+            PlaceAttackHighlight(right, attackrangeLeft - 1);
+        }
+        //down
+        if (groundMap.HasTile(down))
+        {
+            PlaceAttackHighlight(down, attackrangeLeft - 1);
+        }
+    }
 }
