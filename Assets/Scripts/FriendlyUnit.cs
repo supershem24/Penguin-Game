@@ -25,9 +25,10 @@ public class FriendlyUnit : Unit
                 //this is for selecting a place for the unit to move
                 if (map.highlighterMap.GetTile(gridPosition) == map.moveHighlight)
                 {
-                    Vector2 high = map.highlighterMap.CellToWorld(gridPosition);
+                    map.highlighterMap.ClearAllTiles();
+                    Vector2 newPos = map.highlighterMap.CellToWorld(gridPosition);
                     pastPos = gameObject.transform.position;
-                    gameObject.transform.position = new Vector2(high.x + 0.5f, high.y + 0.5f);
+                    gameObject.transform.position = new Vector2(newPos.x + 0.5f, newPos.y + 0.5f);
                     currentGridPos = gridPosition;
                 }
                 else
@@ -40,34 +41,4 @@ public class FriendlyUnit : Unit
         }
     }
 
-    void OnMouseDown()
-    {
-        if (isSelected)
-            return;
-        if (oneSelected)
-        {
-            StartCoroutine(WaitforOtherUnitMovement());
-            return;
-        }
-
-        //places all the highlights
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3Int gridPosition = map.groundMap.WorldToCell(mousePosition);
-        map.highlighterMap.ClearAllTiles();
-        map.StartPlaceHighlight(gridPosition, movementRange, false);
-        oneSelected = true;
-        StartCoroutine(WaitforNextFrame());
-    }
-
-    IEnumerator WaitforNextFrame()
-    {
-        yield return new WaitForEndOfFrame();
-        isSelected = true;
-    }
-
-    IEnumerator WaitforOtherUnitMovement()
-    {
-        yield return new WaitForEndOfFrame();
-        OnMouseDown();
-    }
 }

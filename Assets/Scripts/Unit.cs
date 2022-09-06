@@ -28,5 +28,50 @@ public class Unit : MonoBehaviour
         if (Time.deltaTime < 0.1f)
             currentGridPos = map.groundMap.WorldToCell(gameObject.transform.position);
 
+        if (Input.GetMouseButtonDown(0))
+        {
+            //for unselecting the unit
+            if (isSelected)
+            {
+                Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector3Int gridPosition = map.groundMap.WorldToCell(mousePosition);
+
+                map.highlighterMap.ClearAllTiles();
+                isSelected = false;
+                Unit.oneSelected = false;
+            }
+        }
+
+    }
+
+    void OnMouseDown()
+    {
+        if (isSelected)
+            return;
+        if (oneSelected)
+        {
+            StartCoroutine(WaitforOtherUnitMovement());
+            return;
+        }
+
+        //places all the highlights
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3Int gridPosition = map.groundMap.WorldToCell(mousePosition);
+        map.highlighterMap.ClearAllTiles();
+        map.StartPlaceHighlight(gridPosition, movementRange, this, false);
+        oneSelected = true;
+        StartCoroutine(WaitforNextFrame());
+    }
+
+    IEnumerator WaitforNextFrame()
+    {
+        yield return new WaitForEndOfFrame();
+        isSelected = true;
+    }
+
+    IEnumerator WaitforOtherUnitMovement()
+    {
+        yield return new WaitForEndOfFrame();
+        OnMouseDown();
     }
 }

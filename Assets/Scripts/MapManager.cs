@@ -105,20 +105,37 @@ public class MapManager : MonoBehaviour
     }
 
     // isAttack, if true will go to PlaceAttackHighlight, if false, it won't
-    public void StartPlaceHighlight(Vector3Int tilePos, int movementLeft, bool isAttack)
+    public void StartPlaceHighlight(Vector3Int tilePos, int movementLeft, Unit unit, bool isAttack)
     {
         friendlyUnitPoses.Clear();
         enemyUnitPoses.Clear();
-        for (int x = 0; x < battleController.friendlyUnits.Count; x++)
+
+        //if summoned by a friendly Unit
+        if(unit.GetType() == typeof(FriendlyUnit))
         {
-            if(battleController.friendlyUnits[x].currentGridPos != tilePos)
-                friendlyUnitPoses.Add(battleController.friendlyUnits[x].currentGridPos);
+            for (int x = 0; x < battleController.friendlyUnits.Count; x++)
+            {
+                if (battleController.friendlyUnits[x] != unit)
+                    friendlyUnitPoses.Add(battleController.friendlyUnits[x].currentGridPos);
+            }
+            for (int x = 0; x < battleController.enemyUnits.Count; x++)
+            {
+                enemyUnitPoses.Add(battleController.enemyUnits[x].currentGridPos);
+            }
         }
-        for (int x = 0; x < battleController.enemyUnits.Count; x++)
+        else //if summoned by an enemy unit (friendlyUnitPoses are enemies)
         {
-            enemyUnitPoses.Add(battleController.enemyUnits[x].currentGridPos);
+            for (int x = 0; x < battleController.enemyUnits.Count; x++)
+            {
+                if (battleController.enemyUnits[x] != unit)
+                    friendlyUnitPoses.Add(battleController.enemyUnits[x].currentGridPos);
+            }
+            for (int x = 0; x < battleController.friendlyUnits.Count; x++)
+            {
+                enemyUnitPoses.Add(battleController.friendlyUnits[x].currentGridPos);
+            }
         }
-        
+
         if (!isAttack) 
         {
             PlaceHighlight(tilePos, movementLeft);
