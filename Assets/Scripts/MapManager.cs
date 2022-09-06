@@ -26,8 +26,8 @@ public class MapManager : MonoBehaviour
     [SerializeField]
     public TileBase attackHighlight;
 
-    int MapSizeX = 10;
-    int MapSizeY = 10;
+    int MapSizeX = 30;
+    int MapSizeY = 30;
     Dictionary<TileBase, TileData> dataFromTiles;
     public List<Vector3Int> friendlyUnitPoses = new List<Vector3Int>();
     public List<Vector3Int> enemyUnitPoses = new List<Vector3Int>();
@@ -76,7 +76,7 @@ public class MapManager : MonoBehaviour
         {
             for(int y = -MapSizeY/2; y < MapSizeY/2; y++)
             {
-                rand = Random.Range(0, 100);
+                rand = Random.Range(0, 10);
                 tile = null;
                 if(rand == 0)
                 {

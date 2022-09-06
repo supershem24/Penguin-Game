@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class FriendlyUnit : Unit
 {
+    //for calcelling a move
+    Vector2 pastPos;
+
     void Update()
     {
         //will be deleted soon
@@ -23,10 +26,14 @@ public class FriendlyUnit : Unit
                 if (map.highlighterMap.GetTile(gridPosition) == map.moveHighlight)
                 {
                     Vector2 high = map.highlighterMap.CellToWorld(gridPosition);
+                    pastPos = gameObject.transform.position;
                     gameObject.transform.position = new Vector2(high.x + 0.5f, high.y + 0.5f);
                     currentGridPos = gridPosition;
                 }
-                map.highlighterMap.ClearAllTiles();
+                else
+                {
+                    map.highlighterMap.ClearAllTiles();
+                }
                 isSelected = false;
                 Unit.oneSelected = false;
             }
