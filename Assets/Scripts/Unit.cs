@@ -11,6 +11,8 @@ public class Unit : MonoBehaviour
     public static void setTilemap(MapManager map) { Unit.map = map; }
 
     public int movementRange;
+    public int attackRange;
+
     public bool isSelected;
     //shows if any unit is selected
     public static bool oneSelected;

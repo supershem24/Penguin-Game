@@ -32,6 +32,8 @@ public class MapManager : MonoBehaviour
     public List<Vector3Int> friendlyUnitPoses = new List<Vector3Int>();
     public List<Vector3Int> enemyUnitPoses = new List<Vector3Int>();
 
+    List<Vector3Int> attackPoses = new List<Vector3Int>();
+
 
     void Awake()
     {
@@ -136,9 +138,14 @@ public class MapManager : MonoBehaviour
             }
         }
 
-        if (!isAttack) 
+        if (!isAttack)
         {
             PlaceHighlight(tilePos, movementLeft);
+            for(int i = 0; i < attackPoses.Count; i++)
+            {
+                PlaceAttackHighlight(attackPoses[i], unit.attackRange);
+            }
+            attackPoses.Clear();
         }
         else if (isAttack)
         {
@@ -158,23 +165,16 @@ public class MapManager : MonoBehaviour
                 return;
             }
         }
-            
         
-        bool hasFriendlyUnit = false;
-        for (int i = 0; i < friendlyUnitPoses.Count; i++)
-        {
-            if (tilePos == friendlyUnitPoses[i])
-            {
-                hasFriendlyUnit = true;
-                break;
-            }
-        }
-
+        bool hasFriendlyUnit = HasFriendlyUnit(tilePos);
+        
         if (!hasFriendlyUnit)
             highlighterMap.SetTile(tilePos, moveHighlight);
         
         if (movementLeft == 0)
         {
+            if(!hasFriendlyUnit)
+                AddAttackPos(tilePos);
             return;
         }
 
@@ -183,26 +183,32 @@ public class MapManager : MonoBehaviour
         Vector3Int right = new Vector3Int(tilePos.x + 1, tilePos.y, tilePos.z);
         Vector3Int down = new Vector3Int(tilePos.x, tilePos.y - 1, tilePos.z);
 
-        //left
-        if(groundMap.HasTile(left) && movementLeft >= getMovementCost(left))
+        
+        for(int i = 0; i < 4; i++)
         {
-            PlaceHighlight(left, movementLeft - getMovementCost(left));
+            //checks all directions
+            Vector3Int direction = tilePos;
+            switch (i)
+            {
+                case 0: direction = left; break;
+                case 1: direction = up; break;
+                case 2: direction = right; break;
+                case 3: direction = down; break;
+            }
+
+            /*1. checks if there is a tile in said direction: Yes, Continue; No, Leave
+              2. checks if movementLeft is less that the tile's movmentCost in that same direction: 
+                  Yes, (Check for friendly unit on current position, if false, add an AttackPos position and leave); No, continue
+              3. checks if there is a friendly unit in said direction: Yes, add an AttackPos position; No, PlaceHighlight*/
+            if (groundMap.HasTile(direction))
+            {
+                if (movementLeft < getMovementCost(direction)) { if (!hasFriendlyUnit) AddAttackPos(tilePos); continue; }
+                if (HasFriendlyUnit(direction)) { AddAttackPos(tilePos); }
+                PlaceHighlight(direction, movementLeft - getMovementCost(direction));
+            }
         }
-        //up
-        if (groundMap.HasTile(up) && movementLeft >= getMovementCost(up))
-        {
-            PlaceHighlight(up, movementLeft - getMovementCost(up));
-        }
-        //right
-        if (groundMap.HasTile(right) && movementLeft >= getMovementCost(right))
-        {
-            PlaceHighlight(right, movementLeft - getMovementCost(right));
-        }
-        //down
-        if (groundMap.HasTile(down) && movementLeft >= getMovementCost(down))
-        {
-            PlaceHighlight(down, movementLeft - getMovementCost(down));
-        }
+
+        
     }
 
     void PlaceAttackHighlight(Vector3Int tilePos, int attackrangeLeft)
@@ -215,8 +221,8 @@ public class MapManager : MonoBehaviour
         Vector3Int right = new Vector3Int(tilePos.x + 1, tilePos.y, tilePos.z);
         Vector3Int down = new Vector3Int(tilePos.x, tilePos.y - 1, tilePos.z);
 
-
-        highlighterMap.SetTile(tilePos, attackHighlight);
+        if(!highlighterMap.HasTile(tilePos))
+            highlighterMap.SetTile(tilePos, attackHighlight);
 
         if (attackrangeLeft == 0)
         {
@@ -224,7 +230,30 @@ public class MapManager : MonoBehaviour
         }
 
 
-        //left
+        for (int i = 0; i < 4; i++)
+        {
+            //checks all directions
+            Vector3Int direction = tilePos;
+            switch (i)
+            {
+                case 0: direction = left; break;
+                case 1: direction = up; break;
+                case 2: direction = right; break;
+                case 3: direction = down; break;
+            }
+
+            /*1. checks if there is a tile in said direction: Yes, Continue; No, Leave
+              2. checks if movementLeft is less that the tile's movmentCost in that same direction: 
+                  Yes, check for friendly unit; No, PlaceHighlight
+              3. checks if there is a friendly unit in said direction: Yes, add an AttackPos position; No, Leave*/
+            if (groundMap.HasTile(direction))
+            {
+                PlaceAttackHighlight(direction, attackrangeLeft - 1);
+            }
+        }
+
+
+        /*//left
         if (groundMap.HasTile(left))
         {
             PlaceAttackHighlight(left, attackrangeLeft - 1);
@@ -243,6 +272,37 @@ public class MapManager : MonoBehaviour
         if (groundMap.HasTile(down))
         {
             PlaceAttackHighlight(down, attackrangeLeft - 1);
+        }*/
+    }
+
+    /// <summary>
+    /// Checks if there is a friendly unit on the space provided
+    /// </summary>
+    /// <param name="tilePos"></param>
+    /// <returns></returns>
+    bool HasFriendlyUnit(Vector3Int tilePos)
+    {
+        for (int i = 0; i < friendlyUnitPoses.Count; i++)
+        {
+            if (tilePos == friendlyUnitPoses[i])
+            {
+                return true;
+            }
         }
+        return false;
+    }
+
+    //
+    void AddAttackPos(Vector3Int tilePos)
+    {
+        if(!attackPoses.Contains(tilePos))
+            attackPoses.Add(tilePos);
+    }
+
+    void Message()
+    {
+        print("This is message, it is long intentionally");
     }
 }
+
+
