@@ -30,6 +30,7 @@ public class FriendlyUnit : Unit
                     pastPos = gameObject.transform.position;
                     gameObject.transform.position = new Vector2(newPos.x + 0.5f, newPos.y + 0.5f);
                     currentGridPos = gridPosition;
+
                 }
                 else
                 {
