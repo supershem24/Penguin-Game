@@ -5,9 +5,11 @@ using UnityEngine.Tilemaps;
 
 public class Unit : MonoBehaviour
 {
+    protected static BattleController battleController;
     protected static MapManager map;
     public Vector3Int currentGridPos;
 
+    public static void setBattleController(BattleController b) { battleController = b; }
     public static void setTilemap(MapManager map) { Unit.map = map; }
 
     public int movementRange;

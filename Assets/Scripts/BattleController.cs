@@ -6,7 +6,12 @@ public class BattleController : MonoBehaviour
 {
 
     [SerializeField]
+    Canvas canvas;
+    [SerializeField]
     MapManager mapManager;
+    [SerializeField]
+    GameObject attackMenu;
+    AttackMenu attackMenuCS;
 
     [SerializeField]
     List<Unit> Units;
@@ -14,10 +19,13 @@ public class BattleController : MonoBehaviour
     public List<EnemyUnit> enemyUnits;
 
 
+
     // Start is called before the first frame update
     void Start()
     {
+        attackMenuCS = attackMenu.GetComponent<AttackMenu>();
         Unit.setTilemap(mapManager);
+        Unit.setBattleController(this);
         for(int i = 0; i < Units.Count; i++)
         {
             if(Units[i].GetType() == typeof(FriendlyUnit))
@@ -40,5 +48,13 @@ public class BattleController : MonoBehaviour
         pos.x += Input.GetAxis("Horizontal") * 0.02f;
         Camera.main.transform.position = pos;
         Camera.main.orthographicSize -= Input.mouseScrollDelta.y * 0.2f;
+        //canvas.transform.position = pos;
+        
+    }
+
+    public void BringUpAttackMenu(Vector2 unitPos)
+    {
+        attackMenu.transform.position = new Vector2(unitPos.x + 1.25f, unitPos.y + 1f);
+        attackMenu.SetActive(true);
     }
 }
