@@ -117,7 +117,9 @@ public class MapManager : MonoBehaviour
         {
             for (int x = 0; x < battleController.friendlyUnits.Count; x++)
             {
-                if (battleController.friendlyUnits[x] != unit)
+                if(isAttack)
+                    friendlyUnitPoses.Add(battleController.friendlyUnits[x].currentGridPos);
+                else if (battleController.friendlyUnits[x] != unit)
                     friendlyUnitPoses.Add(battleController.friendlyUnits[x].currentGridPos);
             }
             for (int x = 0; x < battleController.enemyUnits.Count; x++)
