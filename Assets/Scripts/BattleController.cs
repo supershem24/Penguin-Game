@@ -58,4 +58,14 @@ public class BattleController : MonoBehaviour
         attackMenu.SetActive(true);
         attackMenuCS.OpenAttackMenu(unit, unitPos);
     }
+
+    public void EndTurn()
+    {
+        print("turn Ended!");
+        for(int i = 0; i < Units.Count; i++)
+        {
+            Units[i].hasMoved = false;
+            Units[i].GetComponent<SpriteRenderer>().color = Color.white;
+        }
+    }
 }

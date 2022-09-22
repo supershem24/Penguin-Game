@@ -63,11 +63,11 @@ public class AttackMenu : MonoBehaviour
         if (hasEnemy)
         {
             attackButton.gameObject.SetActive(false);
-            Vector2 pos = waitButton.transform.position;
-            pos.y += 0.22f;
-            waitButton.transform.position = pos;
+            Vector2 pos = backButton.transform.position;
             pos.y += 0.22f;
             backButton.transform.position = pos;
+            pos.y += 0.22f;
+            waitButton.transform.position = pos;
             hasEnemy = false;
         }
         mapManager.highlighterMap.ClearAllTiles();
