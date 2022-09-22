@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class FriendlyUnit : Unit
 {
-    //for calcelling a move
-    Vector2 pastPos;
 
     void Update()
     {
@@ -16,6 +14,9 @@ public class FriendlyUnit : Unit
 
         if (Input.GetMouseButtonDown(0))
         {
+            //cancels if the attack menu is up OR if the unit has moved.
+            if (AttackMenu.isMenu || hasMoved)
+                return;
             //for unselecting the unit
             if (isSelected)
             {
@@ -30,7 +31,7 @@ public class FriendlyUnit : Unit
                     pastPos = gameObject.transform.position;
                     gameObject.transform.position = new Vector2(newPos.x + 0.5f, newPos.y + 0.5f);
                     currentGridPos = gridPosition;
-                    battleController.BringUpAttackMenu(newPos);
+                    battleController.BringUpAttackMenu(this, newPos);
                 }
                 else
                 {

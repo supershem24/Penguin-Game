@@ -52,24 +52,10 @@ public class BattleController : MonoBehaviour
         
     }
 
-    public void BringUpAttackMenu(Vector2 unitPos)
+    public void BringUpAttackMenu(Unit unit, Vector2 unitPos)
     {
         attackMenu.transform.position = new Vector2(unitPos.x + 1.25f, unitPos.y + 1f);
         attackMenu.SetActive(true);
-    }
-
-    public void AttackButton()
-    {
-        
-    }
-
-    public void WaitButton()
-    {
-
-    }
-
-    public void BackButton()
-    {
-
+        attackMenuCS.OpenAttackMenu(unit, unitPos);
     }
 }

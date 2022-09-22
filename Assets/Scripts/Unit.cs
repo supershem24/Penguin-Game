@@ -18,6 +18,9 @@ public class Unit : MonoBehaviour
     public bool isSelected;
     //shows if any unit is selected
     public static bool oneSelected;
+    //for calcelling a move
+    public Vector2 pastPos;
+    public bool hasMoved;
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +37,9 @@ public class Unit : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            //cancels if the attack menu is up OR if the unit has moved.
+            if (AttackMenu.isMenu || hasMoved)
+                return;
             //for unselecting the unit
             if (isSelected)
             {
@@ -50,6 +56,9 @@ public class Unit : MonoBehaviour
 
     void OnMouseDown()
     {
+        //cancels if the attack menu is up OR if the unit has moved.
+        if (AttackMenu.isMenu || hasMoved)
+            return;
         if (isSelected)
             return;
         if (oneSelected)

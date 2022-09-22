@@ -7,6 +7,8 @@ public class MapManager : MonoBehaviour
 {
     [SerializeField]
     BattleController battleController;
+    [SerializeField]
+    AttackMenu attackMenu;
 
 
     public Tilemap groundMap;
@@ -78,21 +80,21 @@ public class MapManager : MonoBehaviour
         {
             for(int y = -MapSizeY/2; y < MapSizeY/2; y++)
             {
-                rand = Random.Range(0, 10);
+                rand = Random.Range(0, 100);
                 tile = null;
-                if(rand == 0)
+                if(rand < 97)
                 {
                     tile = grassTile;
                 }
-                else if(rand == 1)
+                else if(rand == 97)
                 {
                     tile = mountainTile;
                 }
-                else if (rand == 2)
+                else if (rand == 98)
                 {
                     tile = desertTile;
                 }
-                else if (rand >= 3)
+                else if (rand >= 99)
                 {
                     tile = iceTile;
                 }
@@ -109,6 +111,7 @@ public class MapManager : MonoBehaviour
     // isAttack, if true will go to PlaceAttackHighlight, if false, it won't
     public void StartPlaceHighlight(Vector3Int tilePos, int movementLeft, Unit unit, bool isAttack)
     {
+        attackMenu.hasEnemy = false;
         friendlyUnitPoses.Clear();
         enemyUnitPoses.Clear();
 
@@ -117,6 +120,7 @@ public class MapManager : MonoBehaviour
         {
             for (int x = 0; x < battleController.friendlyUnits.Count; x++)
             {
+                //if it's placing movement highlights than unit won't be included in the unitPoses
                 if(isAttack)
                     friendlyUnitPoses.Add(battleController.friendlyUnits[x].currentGridPos);
                 else if (battleController.friendlyUnits[x] != unit)
@@ -213,18 +217,25 @@ public class MapManager : MonoBehaviour
         
     }
 
+    // places attack highlights, will return true if an enemy unit is targeted
     void PlaceAttackHighlight(Vector3Int tilePos, int attackrangeLeft)
     {
-        /*for (int i = 0; i < unitPoses.Count; i++)
-            if (tilePos == unitPoses[i])*/
 
         Vector3Int left = new Vector3Int(tilePos.x - 1, tilePos.y, tilePos.z);
         Vector3Int up = new Vector3Int(tilePos.x, tilePos.y + 1, tilePos.z);
         Vector3Int right = new Vector3Int(tilePos.x + 1, tilePos.y, tilePos.z);
         Vector3Int down = new Vector3Int(tilePos.x, tilePos.y - 1, tilePos.z);
 
-        if(!highlighterMap.HasTile(tilePos))
-            highlighterMap.SetTile(tilePos, attackHighlight);
+        //checks if there is a friendly unit on that space, it then places a highlight there if not
+        bool hasFriendlyUnit = HasFriendlyUnit(tilePos);
+        if (!highlighterMap.HasTile(tilePos))
+            if (!hasFriendlyUnit)
+                highlighterMap.SetTile(tilePos, attackHighlight);
+
+        if (HasEnemyUnit(tilePos))
+        {
+            attackMenu.hasEnemy = true;
+        }
 
         if (attackrangeLeft == 0)
         {
@@ -253,7 +264,6 @@ public class MapManager : MonoBehaviour
                 PlaceAttackHighlight(direction, attackrangeLeft - 1);
             }
         }
-
 
         /*//left
         if (groundMap.HasTile(left))
@@ -287,6 +297,23 @@ public class MapManager : MonoBehaviour
         for (int i = 0; i < friendlyUnitPoses.Count; i++)
         {
             if (tilePos == friendlyUnitPoses[i])
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Checks if there is an Enemy unit on the space provided
+    /// </summary>
+    /// <param name="tilePos"></param>
+    /// <returns></returns>
+    bool HasEnemyUnit(Vector3Int tilePos)
+    {
+        for (int i = 0; i < enemyUnitPoses.Count; i++)
+        {
+            if (tilePos == enemyUnitPoses[i])
             {
                 return true;
             }
