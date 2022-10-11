@@ -80,21 +80,21 @@ public class MapManager : MonoBehaviour
         {
             for(int y = -MapSizeY/2; y < MapSizeY/2; y++)
             {
-                rand = Random.Range(0, 100);
+                rand = Random.Range(0, 10);
                 tile = null;
-                if(rand < 97)
+                if(rand < 6)
                 {
                     tile = grassTile;
                 }
-                else if(rand == 97)
+                else if(rand == 6)
                 {
                     tile = mountainTile;
                 }
-                else if (rand == 98)
+                else if (rand == 7)
                 {
                     tile = desertTile;
                 }
-                else if (rand >= 99)
+                else if (rand >= 8)
                 {
                     tile = iceTile;
                 }
@@ -218,6 +218,7 @@ public class MapManager : MonoBehaviour
     }
 
     // places attack highlights, will return true if an enemy unit is targeted
+    //It also assigns Friendly and enemy units according to the turn time
     void PlaceAttackHighlight(Vector3Int tilePos, int attackrangeLeft)
     {
 
@@ -292,7 +293,7 @@ public class MapManager : MonoBehaviour
     /// </summary>
     /// <param name="tilePos"></param>
     /// <returns></returns>
-    bool HasFriendlyUnit(Vector3Int tilePos)
+    public bool HasFriendlyUnit(Vector3Int tilePos)
     {
         for (int i = 0; i < friendlyUnitPoses.Count; i++)
         {
@@ -309,7 +310,7 @@ public class MapManager : MonoBehaviour
     /// </summary>
     /// <param name="tilePos"></param>
     /// <returns></returns>
-    bool HasEnemyUnit(Vector3Int tilePos)
+    public bool HasEnemyUnit(Vector3Int tilePos)
     {
         for (int i = 0; i < enemyUnitPoses.Count; i++)
         {
@@ -319,6 +320,26 @@ public class MapManager : MonoBehaviour
             }
         }
         return false;
+    }
+
+    //Must be called after placing Highlights, and then removes the Highlights
+    public List<Vector3Int> GetEnemyUnitPos()
+    {
+        List<Vector3Int> attackableEnemies = new List<Vector3Int>();
+        for (int x = -MapSizeX / 2; x < MapSizeX / 2; x++)
+        {
+            for (int y = -MapSizeY / 2; y < MapSizeY / 2; y++)
+            {
+                Vector3Int tilePos = new Vector3Int(x, y, 0);
+                if(highlighterMap.HasTile(tilePos))
+                {
+                    if (HasEnemyUnit(tilePos))
+                        attackableEnemies.Add(tilePos);
+                }
+            }
+        }
+        highlighterMap.ClearAllTiles();
+        return attackableEnemies;
     }
 
     //

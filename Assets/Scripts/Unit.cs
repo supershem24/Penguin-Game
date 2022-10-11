@@ -12,15 +12,18 @@ public class Unit : MonoBehaviour
     public static void setBattleController(BattleController b) { battleController = b; }
     public static void setTilemap(MapManager map) { Unit.map = map; }
 
-    public int movementRange;
-    public int attackRange;
-
     public bool isSelected;
     //shows if any unit is selected
     public static bool oneSelected;
     //for calcelling a move
     public Vector2 pastPos;
     public bool hasMoved;
+
+    //STATS SHOWN TO PLAYER
+    public int movementRange;
+    public int attackRange;
+    public int attackDamage;
+    public int health;
 
     // Start is called before the first frame update
     void Start()
@@ -74,6 +77,37 @@ public class Unit : MonoBehaviour
         map.StartPlaceHighlight(gridPosition, movementRange, this, false);
         oneSelected = true;
         StartCoroutine(WaitforNextFrame());
+    }
+
+    /// <summary>
+    /// The Unit attacks another unit
+    /// </summary>
+    public void Attack(Vector2 enemyPos)
+    {
+        print(enemyPos);
+        EnemyUnit enemy;
+        enemy = battleController.enemyUnits[0];
+
+        //finds the enemy at the position
+        foreach (EnemyUnit enemyUnit in battleController.enemyUnits)
+        {
+            if((Vector2)enemyUnit.transform.position == enemyPos)
+            {
+                enemy = enemyUnit;
+                break;
+            }
+            else { return; }
+        }
+        enemy.TakeDamage(attackDamage);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if(health <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     IEnumerator WaitforNextFrame()

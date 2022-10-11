@@ -16,7 +16,9 @@ public class AttackMenu : MonoBehaviour
     MapManager mapManager;
 
     Unit currentUnit;
+    Vector3Int currentUnitGridPos;
 
+    bool waitForAttack = false;
     public bool hasEnemy;
     public static bool isMenu;
 
@@ -29,7 +31,25 @@ public class AttackMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (waitForAttack)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector3Int gridPosition = mapManager.groundMap.WorldToCell(mousePosition);
+                
+                //this is for making sure the place can be attacked
+                if (mapManager.highlighterMap.GetTile(gridPosition) == mapManager.attackHighlight)
+                {
+                    //a bit too long please fix
+                    Vector2 enemyPos = new Vector2(mapManager.groundMap.CellToWorld(gridPosition).x + 0.5f, mapManager.groundMap.CellToWorld(gridPosition).y + 0.5f);
+                    currentUnit.Attack(enemyPos);
+                    waitForAttack = false;
+                    currentUnit.hasMoved = true;
+                    CloseAttackMenu();
+                }
+            }
+        }
     }
     
     /// <summary>
@@ -41,7 +61,9 @@ public class AttackMenu : MonoBehaviour
     {
         isMenu = true;
         currentUnit = unit;
-        mapManager.StartPlaceHighlight(mapManager.groundMap.WorldToCell(unitPos), unit.attackRange, unit, true);
+        currentUnitGridPos = mapManager.groundMap.WorldToCell(unitPos);
+        //checks for if there is an enemy in range, if so, bring up attack as well
+        mapManager.StartPlaceHighlight(currentUnitGridPos, unit.attackRange, unit, true);
         mapManager.highlighterMap.ClearAllTiles();
         if (hasEnemy)
         {
@@ -77,9 +99,15 @@ public class AttackMenu : MonoBehaviour
 
     public void AttackButton()
     {
-        currentUnit.hasMoved = true;
+        mapManager.StartPlaceHighlight(currentUnitGridPos, currentUnit.attackRange, currentUnit, true);
+        List<Vector3Int> attackableEnemies = mapManager.GetEnemyUnitPos();
+        for(int i = 0; i < attackableEnemies.Count; i++)
+        {
+            mapManager.highlighterMap.SetTile(attackableEnemies[i], mapManager.attackHighlight);
+        }
+        waitForAttack = true;
+
         currentUnit.gameObject.GetComponent<SpriteRenderer>().color = Color.red;
-        CloseAttackMenu();
     }
 
     public void WaitButton()
