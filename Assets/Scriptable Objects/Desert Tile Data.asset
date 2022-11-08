@@ -12,7 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bff0e3ead6c5be49a3ca3c2ef06e62e, type: 3}
   m_Name: Desert Tile Data
   m_EditorClassIdentifier: 
-  tiles:
-  - {fileID: 11400000, guid: e63ec66de070f5e45b946fabc26b6ad4, type: 2}
-  movementCost: 2
-  protection: 1
+  tiles: []
+  protection: 0

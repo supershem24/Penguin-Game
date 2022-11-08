@@ -8,7 +8,7 @@ public class Unit : MonoBehaviour
     protected static BattleController battleController;
     protected static MapManager map;
     public Vector3Int currentGridPos;
-
+    public UnitType unitType;
     public static void setBattleController(BattleController b) { battleController = b; }
     public static void setTilemap(MapManager map) { Unit.map = map; }
 

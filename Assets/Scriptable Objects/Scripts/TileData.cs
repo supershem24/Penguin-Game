@@ -7,8 +7,7 @@ using UnityEngine.Tilemaps;
 public class TileData : ScriptableObject
 {
     public TileBase[] tiles;
-
-    //public TileData[] tileByUnitType; Implement Unit tiles later
+    //public Dictionary<string, int> movementCost;
     public int movementCost;
     public float protection;
     

@@ -80,7 +80,8 @@ public class MapManager : MonoBehaviour
         {
             for(int y = -MapSizeY/2; y < MapSizeY/2; y++)
             {
-                rand = Random.Range(0, 10);
+                //CURRENTLY tile isn't random due to design change, we'll get to that later
+                /*rand = Random.Range(0, 10);
                 tile = null;
                 if(rand < 6)
                 {
@@ -97,7 +98,8 @@ public class MapManager : MonoBehaviour
                 else if (rand >= 8)
                 {
                     tile = iceTile;
-                }
+                }*/
+                tile = grassTile;
                 groundMap.SetTile(new Vector3Int(x, y, 0), tile);
             }
         }
