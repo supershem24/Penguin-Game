@@ -15,4 +15,4 @@ MonoBehaviour:
   tiles:
   - {fileID: 11400000, guid: 53d891add3ef34947b80b2877476739f, type: 2}
   movementCost: 2
-  protection: 1
+  protection: 2

@@ -49,7 +49,32 @@ public class BattleController : MonoBehaviour
         Camera.main.transform.position = pos;
         Camera.main.orthographicSize -= Input.mouseScrollDelta.y * 0.2f;
         //canvas.transform.position = pos;
-        
+
+        //The On Clicker
+        if (Input.GetMouseButtonDown(0))
+        {
+            ClickClickableObjects(true);
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            ClickClickableObjects(false);
+        }
+    }
+
+    void ClickClickableObjects(bool isLeftClick)
+    {
+        RaycastHit2D[] hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, 10.0f);
+        foreach(RaycastHit2D hit in hits)
+        {
+            print(hit.collider);
+            if(hit.collider.GetType() == typeof(IClickable))
+            {
+                if(isLeftClick)
+                    hit.collider.GetComponent<IClickable>().OnClick();
+                else { hit.collider.GetComponent<IClickable>().OnRightClick(); }
+            }
+
+        }
     }
 
     public void BringUpAttackMenu(Unit unit, Vector2 unitPos)

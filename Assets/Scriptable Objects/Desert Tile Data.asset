@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Desert Tile Data
   m_EditorClassIdentifier: 
   tiles: []
-  protection: 0
+  movementCost: 2
+  protection: 1

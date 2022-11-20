@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class Unit : MonoBehaviour
+public class Unit : MonoBehaviour//, IClickable
 {
     protected static BattleController battleController;
     protected static MapManager map;
@@ -59,7 +59,32 @@ public class Unit : MonoBehaviour
 
     void OnMouseDown()
     {
-        //cancels if the attack menu is up OR if the unit has moved.
+
+        if (AttackMenu.isMenu || hasMoved)
+            return;
+
+        if (isSelected)
+        {
+            map.highlighterMap.ClearAllTiles();
+            isSelected = false;
+            Unit.oneSelected = false;
+            return;
+        }
+        if (oneSelected)
+        {
+            StartCoroutine(WaitforOtherUnitMovement());
+            return;
+        }
+
+        //places all the highlights
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3Int gridPosition = map.groundMap.WorldToCell(mousePosition);
+        map.highlighterMap.ClearAllTiles();
+        map.StartPlaceHighlight(gridPosition, movementRange, this, false);
+        oneSelected = true;
+        StartCoroutine(WaitforNextFrame());
+
+        /*//cancels if the attack menu is up OR if the unit has moved.
         if (AttackMenu.isMenu || hasMoved)
             return;
         if (isSelected)
@@ -76,7 +101,7 @@ public class Unit : MonoBehaviour
         map.highlighterMap.ClearAllTiles();
         map.StartPlaceHighlight(gridPosition, movementRange, this, false);
         oneSelected = true;
-        StartCoroutine(WaitforNextFrame());
+        StartCoroutine(WaitforNextFrame());*/
     }
 
     /// <summary>
